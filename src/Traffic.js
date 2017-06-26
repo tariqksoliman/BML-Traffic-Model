@@ -9,8 +9,8 @@ function Traffic( density ) {
     var cars = null;
     var colors = {
         0: [0,0,0,0],
-        1: [45,200,245,255],
-        2: [45,200,245,185]
+        1: [35,190,245,255],
+        2: [195,10,185,195]
     };
     
     var traffic = {
