@@ -1,4 +1,4 @@
-function Traffic( density ) {
+function Traffic() {
     var cW = 0;
     var cH = 0;
     var ctx = null;
@@ -7,21 +7,33 @@ function Traffic( density ) {
     var downturn = false;
 
     var cars = null;
-    var colors = {
-        0: [0,0,0,0],
-        1: [35,190,245,255],
-        2: [195,10,185,195]
-    };
+    var colors;
+
+    var fps = 60;
+
+    var requestAnim = null;
+    var timeoutAnim = null;
     
     var traffic = {
-        init: function( density ) {
+        init: function( density, resolution, framerate, color1, color2, colorbg ) {
+            colors = {
+                0: [0,0,0,0],
+                1: color1,
+                2: color2
+            };
+
+            this.setColor( 'bg', colorbg );
+            fps = framerate;
+
             let c = document.getElementById( 'bml-canvas' );
-            cW = c.width = Math.round( window.innerWidth/2 );
-            cH = c.height = Math.round( window.innerHeight/2 );
+            cW = c.width = Math.round( window.innerWidth/resolution );
+            cH = c.height = Math.round( window.innerHeight/resolution );
             ctx = c.getContext( '2d' );
             ctx.imageSmoothingEnabled = false;
 
+            if( cars ) cars = null;
             cars = new Int8Array( cW * cH );
+            
             cars.fill( 0, 0, cars.length );
             imgData = ctx.getImageData( 0, 0, cW, cH );
 
@@ -42,35 +54,38 @@ function Traffic( density ) {
                 }
             }
 
+            if( requestAnim ) window.cancelAnimationFrame( requestAnim );
+            if( timeoutAnim ) clearTimeout( timeoutAnim );
+
             this.animate();
 
         },
         animate: function() {
-            //For each canvas pixel
-            for( var y = 0; y < cH; y++ ) {
-                for( var x = 0; x < cW; x++ ) {
-                    if( downturn && cars[ y * cW + x ] === 1 ) {
-                        if( cars[ ( ( y + 1 ) % cH ) * cW + x ] === 0 ) {
-                            cars[ ( ( y + 1 ) % cH ) * cW + x ] = -cars[ y * cW + x ];
-                            cars[ y * cW + x ] = 0;  
+            timeoutAnim = setTimeout(function() { //super simple framerate
+                //For each canvas pixel
+                for( var y = 0; y < cH; y++ ) {
+                    for( var x = 0; x < cW; x++ ) {
+                        if( downturn && cars[ y * cW + x ] === 1 ) {
+                            if( cars[ ( ( y + 1 ) % cH ) * cW + x ] === 0 ) {
+                                cars[ ( ( y + 1 ) % cH ) * cW + x ] = -cars[ y * cW + x ];
+                                cars[ y * cW + x ] = 0;  
+                            }
                         }
-                    }
-                    else if( !downturn && cars[ y * cW + x ] === 2 ) {
-                        if( cars[ y * cW + ( ( x + 1 ) % cW ) ] === 0 ) {
-                            cars[ y * cW + ( ( x + 1 ) % cW ) ] = -cars[ y * cW + x ];
-                            cars[ y * cW + x ] = 0;
+                        else if( !downturn && cars[ y * cW + x ] === 2 ) {
+                            if( cars[ y * cW + ( ( x + 1 ) % cW ) ] === 0 ) {
+                                cars[ y * cW + ( ( x + 1 ) % cW ) ] = -cars[ y * cW + x ];
+                                cars[ y * cW + x ] = 0;
+                            }
                         }
                     }
                 }
-            }
 
-            downturn = !downturn;
+                downturn = !downturn;
 
-            traffic.render();
+                traffic.render();
 
-            //setTimeout(function() {
-            requestAnimationFrame( traffic.animate );
-            //}, 1000 / 1 );
+                requestAnim = requestAnimationFrame( traffic.animate );
+            }, 1000 / fps );
         },
         render: function() {
             for( let i = 0; i < cars.length; i++ ) {
@@ -82,6 +97,20 @@ function Traffic( density ) {
                 imgData.data[ i * 4 + 3 ] = colors[ cars[i] ][3];
             }
             ctx.putImageData( imgData, 0, 0 );
+        },
+        setColor( type, c ) {
+            switch( type ) {
+                case 'down':
+                        colors[1] = [ c.r, c.g, c.b, c.a * 255 ];
+                    break;
+                case 'right':
+                        colors[2] = [ c.r, c.g, c.b, c.a * 255 ];
+                    break;
+                case 'bg':
+                        document.body.style.backgroundColor = 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
+                    break;
+                default:
+            }
         }
     }
 
