@@ -11,10 +11,14 @@ var startingFramerate = 60;
 var startingColor1 = [35,190,245,255];
 var startingColor2 = [195,10,185,195];
 var startingColorBG = [238,238,238,255];
+var startingDimenX = window.innerWidth / 2;
+var startingDimenY = window.innerHeight / 2;
 
 var bmltraffic = new Traffic();
 //starts in running immediately
 bmltraffic.init(  startingDensity,
+                  startingDimenX,
+                  startingDimenY,
                   startingResolution,
                   startingFramerate,
                   startingColor1,
@@ -35,11 +39,7 @@ class Toolbar extends Component {
   render() {
     return(
       <div className='Toolbar'>
-        <Title />
-        <Density />
-        <Resolution />
-        <Framerate />
-        <div style={{ margin: '8px' }}></div>
+        <Title />      
         <Color
           label='Down Color'
           initcolor= {'rgba(' + startingColor1[0] + ',' + startingColor1[1] + ',' + startingColor1[2] + ',' + startingColor1[3]/255 + ')'}
@@ -52,6 +52,11 @@ class Toolbar extends Component {
           label='BG Color'
           initcolor={'rgba(' + startingColorBG[0] + ',' + startingColorBG[1] + ',' + startingColorBG[2] + ',' + startingColorBG[3]/255 + ')'}
         />
+        <div style={{ margin: '18px' }}></div>
+        <Dimension />
+        <Density />
+        <Resolution />
+        <Framerate />
         <Reinitiate />
       </div>
     )
@@ -86,17 +91,51 @@ class Resolution extends Component {
     )
   }
 }
-/*
+
 //10,10 to innerW, innerH
 class Dimension extends Component {
+  constructor( props ) {
+    super( props );
+
+    this.state = {
+      valueX: startingDimenX,
+      valueY: startingDimenY
+    }
+  }
+
+  handleChange( event, type ) {
+    if( type === 'x' ) {
+      this.setState({valueX: event.target.value});
+      startingDimenX = event.target.value;
+    }
+    else if( type === 'y' ) {
+      this.setState({valueY: event.target.value});
+      startingDimenY = event.target.value;
+    }
+  }
+
   render() {
     return (
       <div>
+        <div className='DimensionPicker'>
+          <div className='dimension-label'>Dimension</div>
+          <input type='number'
+            value={Math.round( this.state.valueX )}
+            min={10}
+            max={window.innerWidth}
+            onChange={(e) => this.handleChange(e,'x')}>
+          </input>
+          <input type='number'
+            value={Math.round( this.state.valueY )}
+            min={10}
+            max={window.innerHeight}
+            onChange={(e) => this.handleChange(e,'y')}>
+          </input>
+        </div>
       </div>
     )
   }
 }
-*/
 
 //1 to 250
 class Density extends Component {
@@ -247,6 +286,8 @@ class Color extends Component {
 class Reinitiate extends Component {
   reinitiate() {
     bmltraffic.init(  startingDensity,
+                  startingDimenX,
+                  startingDimenY,
                   startingResolution,
                   startingFramerate,
                   startingColor1,

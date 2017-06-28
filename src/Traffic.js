@@ -15,7 +15,7 @@ function Traffic() {
     var timeoutAnim = null;
     
     var traffic = {
-        init: function( density, resolution, framerate, color1, color2, colorbg ) {
+        init: function( density, dimX, dimY, resolution, framerate, color1, color2, colorbg ) {
             colors = {
                 0: [0,0,0,0],
                 1: color1,
@@ -26,8 +26,11 @@ function Traffic() {
             fps = framerate;
 
             let c = document.getElementById( 'bml-canvas' );
-            cW = c.width = Math.round( window.innerWidth/resolution );
-            cH = c.height = Math.round( window.innerHeight/resolution );
+            cW = c.width = Math.max( Math.round( dimX / resolution ), 10 );
+            cH = c.height = Math.max( Math.round( dimY / resolution ), 10 );
+            c.style.width = dimX + 'px';
+            c.style.height = dimY + 'px';
+
             ctx = c.getContext( '2d' );
             ctx.imageSmoothingEnabled = false;
 
