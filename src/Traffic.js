@@ -15,9 +15,9 @@ function Traffic() {
     var timeoutAnim = null;
     
     var traffic = {
-        init: function( density, dimX, dimY, resolution, framerate, color1, color2, colorbg ) {
+        init: function( density, dimX, dimY, resolution, framerate, color0, color1, color2, colorbg ) {
             colors = {
-                0: [0,0,0,0],
+                0: color0,
                 1: color1,
                 2: color2
             };
@@ -102,18 +102,21 @@ function Traffic() {
             ctx.putImageData( imgData, 0, 0 );
         },
         setColor( type, c ) {
-            switch( type ) {
+            switch( type ) {          
+                case 'bg':
+                        colors[0] = [ c.r, c.g, c.b, c.a * 255 ];
+                    break;
                 case 'down':
                         colors[1] = [ c.r, c.g, c.b, c.a * 255 ];
                     break;
                 case 'right':
                         colors[2] = [ c.r, c.g, c.b, c.a * 255 ];
                     break;
-                case 'bg':
-                        document.body.style.backgroundColor = 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
-                    break;
                 default:
             }
+        },
+        setFramerate( framerate ) {
+            fps = framerate;
         }
     }
 

@@ -1,0 +1,36 @@
+#about-title {
+    font-family: 'petita';
+    font-size: 29px;
+    color: #111;
+    text-align: center;
+    margin-bottom: 20px;
+    opacity: 0.75;
+}
+
+#about-algorithm {
+    font-family: monospace;
+    margin-bottom: 50px;
+}
+.i1 {
+  margin-left: 40px;  
+}
+.i2 {
+  margin-left: 80px;  
+}
+.i3 {
+  margin-left: 120px;  
+}
+.i4 {
+  margin-left: 160px;  
+}
+.i5 {
+  margin-left: 200px;  
+}
+
+#about-who {
+    text-align: center;
+    font-family: monospace;
+    font-size: 14px;
+    padding-bottom: 10px;
+    opacity: 0.7;
+}

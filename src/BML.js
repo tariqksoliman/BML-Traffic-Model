@@ -21,6 +21,7 @@ bmltraffic.init(  startingDensity,
                   startingDimenY,
                   startingResolution,
                   startingFramerate,
+                  startingColorBG,
                   startingColor1,
                   startingColor2,
                   startingColorBG );
@@ -39,7 +40,8 @@ class Toolbar extends Component {
   render() {
     return(
       <div className='Toolbar'>
-        <Title />      
+        <Title />
+        <About />
         <Color
           label='Down Color'
           initcolor= {'rgba(' + startingColor1[0] + ',' + startingColor1[1] + ',' + startingColor1[2] + ',' + startingColor1[3]/255 + ')'}
@@ -52,11 +54,10 @@ class Toolbar extends Component {
           label='BG Color'
           initcolor={'rgba(' + startingColorBG[0] + ',' + startingColorBG[1] + ',' + startingColorBG[2] + ',' + startingColorBG[3]/255 + ')'}
         />
-        <div style={{ margin: '18px' }}></div>
-        <Dimension />
         <Density />
         <Resolution />
         <Framerate />
+        <Dimension />
         <Reinitiate />
       </div>
     )
@@ -67,13 +68,42 @@ class Title extends Component {
   render() {
     return (
       <div className='Title'>
-        <a href='https://en.wikipedia.org/wiki/Biham%E2%80%93Middleton%E2%80%93Levine_traffic_model' target='_blank' rel='noopener noreferrer'>
+        <a href='https://github.com/tariqksoliman/BML-Traffic-Model' target='_blank' rel='noopener noreferrer'>
           BML Traffic
         </a>
       </div>
     )
   }
 }
+
+class About extends Component {
+
+  handleClick() {
+    let cc = document.getElementById( 'container-canvas' );
+    let ca = document.getElementById( 'container-about' );
+    let isFlipped = ( cc.className === 'flipped' );
+
+    if( isFlipped ) {
+      cc.className = '';
+      ca.className = 'flipped';
+    }
+    else {
+      cc.className = 'flipped';
+      ca.className = '';
+    }
+
+    ca.style.transition = 'transform 2s ease-in, opacity 2s ease-in';
+  }
+
+  render() {
+    return (
+      <div className='About'>
+        <div onClick={() => this.handleClick()}>About</div>
+      </div>
+    )
+  }
+}
+
 
 //1 to 250
 class Resolution extends Component {
@@ -191,6 +221,7 @@ class RangePicker extends Component {
         break;
       case 'Framerate':
           startingFramerate = event.target.value;
+          bmltraffic.setFramerate( startingFramerate );
         break;
       default:
     }
@@ -290,6 +321,7 @@ class Reinitiate extends Component {
                   startingDimenY,
                   startingResolution,
                   startingFramerate,
+                  startingColorBG,
                   startingColor1,
                   startingColor2,
                   startingColorBG );
