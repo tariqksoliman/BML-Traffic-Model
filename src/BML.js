@@ -11,8 +11,8 @@ var startingFramerate = 60;
 var startingColor1 = [35,190,245,255];
 var startingColor2 = [195,10,185,195];
 var startingColorBG = [238,238,238,255];
-var startingDimenX = window.innerWidth / 2;
-var startingDimenY = window.innerHeight / 2;
+var startingDimenX = window.innerWidth / 2.4;
+var startingDimenY = window.innerHeight / 2.4;
 
 var bmltraffic = new Traffic();
 //starts in running immediately
@@ -186,14 +186,18 @@ class Density extends Component {
 
 //1 to 60
 class Framerate extends Component {
+  getBeforeValue() {
+    return bmltraffic.getActualfps() + ' / ';
+  }
   render() {
     return (
       <div>
         <RangePicker
           label='Framerate'
+          beforevalue={() => this.getBeforeValue()}
           initvalue='60'
           min='1'
-          max='60'
+          max='70'
           step='1'
         />
       </div>
@@ -206,8 +210,11 @@ class RangePicker extends Component {
     super( props );
 
     this.state = {
+      beforevalue: '',
       value: this.props.initvalue
     }
+
+    setInterval(() => this.getBeforeValues(), 1000 );
   }
 
   handleChange( event ) {
@@ -227,10 +234,19 @@ class RangePicker extends Component {
     }
   }
 
+  getBeforeValues() {
+    if( typeof this.props.beforevalue === 'function' ) {
+      this.setState({
+        beforevalue: this.props.beforevalue()
+      });
+    }
+    return '';
+  }
+
   render() {
     return (
       <div className='RangePicker'>
-        <div className='range-label'>{this.props.label}<span>{this.state.value}</span></div>
+        <div className='range-label'>{this.props.label}<span>{this.state.beforevalue}{this.state.value}</span></div>
         <input type='range'
           value={this.state.value}
           min={this.props.min}

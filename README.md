@@ -16,6 +16,3 @@ The concept is simple:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And so on...  
 &nbsp;&nbsp;&nbsp;Cars only move if their future spot is vacant  
 &nbsp;&nbsp;&nbsp;Cars of their type only move all at once
-
-### TODO:
-Use WebGL shaders instead of straight canvas.

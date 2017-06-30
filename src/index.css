@@ -50,10 +50,12 @@ body {
   transform-style: preserve-3d;
   opacity: 1;
   overflow-y: auto;
+  pointer-events: inherit;
 }
 #container-about.flipped {
   opacity: 0;
   transform: rotateX( 180deg );
+  pointer-events: none;
 }
 
 #bml-canvas {
